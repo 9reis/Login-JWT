@@ -20,10 +20,16 @@ const userController = {
         }
     } ,
     login:function(req,res){
-    console.log('login')
-    res.send('Login')
+        const selectedUser = await User.findOne({email:req.body.email})
+        if(!selectedUser) return res.status(400).send("Email or Password incorrect")
+        
+        const passwordAndUserMatch = bcrypt(req.body.password, selectedUser.password)
+        if(!passwordAndUserMatch)return res.status(400).send("Email or Password incorrect")
+        
+        res.send("User Logged")
+    
     }
 }
 
 
-module.exports = userController ;
+module.exports = userController;
